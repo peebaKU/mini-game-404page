@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>archismartsolution</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #111;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+
+    h1 {
+      font-size: 4rem;
+      margin: 0;
+      color: #ff6600;
+    }
+
+    p {
+      margin-bottom: 30px;
+      font-size: 1.2rem;
+    }
+
+    #game-area {
+      width: 100vw;
+      height: 100vh;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    .cat {
+      width: 60px;
+      height: 60px;
+      background: url('cat-walk.gif') no-repeat center/cover;
+      position: absolute;
+      cursor: pointer;
+      z-index: 50;
+      transition: top 0.3s, left 0.3s;
+    }
+    .cat-background {
+      background-color: white;
+      width: 18px;
+      height: 18px;
+      border-radius: 8px;
+      position: absolute;
+      cursor: pointer;
+      margin-left: 27px ;
+      margin-top: 13px;
+      transition: top 0.3s, left 0.3s;
+    }
+    .score {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #ff6600;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 1.2rem;
+      z-index: 1;
+    }
+
+    #restartBtn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #ff6600;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      z-index: 1;
+    }
+
+    #restartBtn:hover {
+      background: #ff8800;
+    }
+
+    .cat:hover::after {
+    content: "Click me!";
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ff6600;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 2;
+  }
+  
+
+  </style>
+</head>
+<body>
+  <h1>404</h1>
+  <p>Oops! Page not found. Catch the cat to fix it!</p>
+  <div class="score">Score: <span id="score">0</span></div>
+  <div id="game-area">
+    <span class="cat" id="cat"></span>
+    <span class="cat-background"></span>
+  </div>
+  <button id="restartBtn" onclick="restartGame()">Start Game</button>
+
+  <script>
+    const cat = document.getElementById('cat');
+    const catBackground = document.querySelector('.cat-background');
+    const scoreDisplay = document.getElementById('score');
+    const restartBtn = document.getElementById('restartBtn');
+    let score = 0;
+    let gameStarted = false;
+    let gameInterval;
+
+    function moveCat() {
+      const maxX = window.innerWidth - 60;
+      const maxY = window.innerHeight - 60;
+      const x = Math.random() * maxX;
+      const y = Math.random() * maxY;
+      cat.style.left = x + 'px';
+      cat.style.top = y + 'px';
+      catBackground.style.left = x + 'px';
+      catBackground.style.top = y + 'px';
+    }
+
+    function startGame() {
+      moveCat();
+      gameInterval = setInterval(moveCat, 1200);
+    }
+
+    function stopGame() {
+      if (gameInterval) {
+        clearInterval(gameInterval);
+        gameInterval = null;
+      }
+    }
+
+    function restartGame() {
+      stopGame();
+      score = 0;
+      scoreDisplay.textContent = score;
+      startGame();
+
+      if (!gameStarted) {
+        restartBtn.textContent = "Restart Game";
+        gameStarted = true;
+      }
+      else{
+        restartBtn.textContent = "Start Game";
+        gameStarted = false;
+        stopGame();
+        cat.style.left = '50%';
+        cat.style.top = '50%';
+        catBackground.style.left = '50%';
+        catBackground.style.top = '50%';
+      }
+    }
+
+    cat.addEventListener('click', () => {
+      if (gameStarted) {
+      score++;
+      scoreDisplay.textContent = score;
+      moveCat();
+      }
+    });
+
+    window.onload = () => {
+      restartBtn.textContent = "Start Game";
+    };
+  </script>
+</body>
+</html>
